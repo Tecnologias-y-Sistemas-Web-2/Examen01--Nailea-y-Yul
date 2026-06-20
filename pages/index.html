@@ -39,29 +39,37 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 id="modalNombre"></h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
+            <button class="btn-close modal-close-btn" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+
+            <div class="modal-name-header">
+                <img src="../img/International_Pokémon_logo.svg" alt="Pokémon" class="modal-pokemon-logo">
+                <div class="modal-name-bar">
+                    <span id="modalNombre"></span>
+                </div>
             </div>
 
             <div class="modal-body">
 
-                <div class="text-center">
+                <div class="modal-left">
                     <img id="modalImagen" width="200">
+                    <p class="modal-meta"><span id="modalGeneracion"></span> &bull; <span id="modalId"></span></p>
                 </div>
 
-                <p><b>ID:</b> <span id="modalId"></span></p>
-                <p><b>Altura:</b> <span id="modalAltura"></span></p>
-                <p><b>Peso:</b> <span id="modalPeso"></span></p>
+                <div class="modal-right">
 
-                <p><b>Tipos:</b></p>
-                <ul id="modalTipos"></ul>
+                    <ul id="modalTipos"></ul>
 
-                <p><b>Habilidades:</b></p>
-                <ul id="modalHabilidades"></ul>
+                    <p class="modal-size">
+                        Height: <span id="modalAltura"></span> &mdash; Weight: <span id="modalPeso"></span>
+                    </p>
 
-                <p><b>Movimientos:</b></p>
-                <ul id="modalMovimientos"></ul>
+                    <h4 class="modal-section-title">Habilidades</h4>
+                    <ul id="modalHabilidades"></ul>
+
+                    <h4 class="modal-section-title">Movimientos</h4>
+                    <p id="modalMovimientos"></p>
+
+                </div>
 
             </div>
 
