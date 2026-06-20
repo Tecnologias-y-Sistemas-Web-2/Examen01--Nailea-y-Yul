@@ -15,7 +15,7 @@ const bootstrapModal = new bootstrap.Modal(pokemonModal);
 function padNumber(value) {
     return String(value).padStart(3, "0");
 }
-
+//funcuion para limpiar las listas del modal antes de cargar nueva informacion, asi evitamos que se acumulen los datos de diferentes pokemones
 function limpiarListas() {
     modalTipos.innerHTML = "";
     modalHabilidades.innerHTML = "";
