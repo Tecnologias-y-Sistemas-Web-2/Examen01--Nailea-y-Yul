@@ -98,36 +98,6 @@ body {
     font-weight: 700;
 }
 
-.modal-header {
-    border-bottom: none;
-}
-
-.modal-content {
-    border-radius: 1.5rem;
-}
-
-#modalImagen {
-    max-width: 240px;
-    width: 100%;
-}
-
-#modalTipos,
-#modalHabilidades,
-#modalMovimientos {
-    list-style: none;
-    padding-left: 0;
-}
-
-#modalTipos li,
-#modalHabilidades li,
-#modalMovimientos li {
-    background: #eff6ff;
-    border-radius: 0.75rem;
-    margin-bottom: 0.45rem;
-    padding: 0.55rem 0.85rem;
-    text-transform: capitalize;
-}
-
 @media (max-width: 768px) {
     h1 {
         font-size: 2rem;
@@ -143,11 +113,133 @@ body {
 }
 
 @media (max-width: 576px) {
-    #modalImagen {
-        max-width: 180px;
-    }
-
     .card-body {
         min-height: 90px;
+    }
+}
+
+/* ============================================================
+   MODAL DE DETALLE — diseño tipo "card" (imagen | información)
+   ============================================================ */
+
+.modal-content {
+    border-radius: 1.5rem;
+    border: none;
+    padding: 2rem;
+    position: relative;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+}
+
+.modal-body {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+    padding: 0;
+}
+
+.modal-left {
+    text-align: center;
+}
+
+/* Logo de Pokémon + barra amarilla con el nombre, dentro del modal */
+.modal-name-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-pokemon-logo {
+    max-width: 220px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 0.75rem;
+}
+
+.modal-name-bar {
+    background: #ffcb05;
+    border-radius: 0.5rem;
+    padding: 0.6rem 1rem;
+}
+
+.modal-name-bar span {
+    color: #2a75bb;
+    font-weight: 800;
+    font-size: 1.5rem;
+    text-transform: capitalize;
+    letter-spacing: 0.02em;
+}
+
+#modalImagen {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+    object-fit: contain;
+}
+
+.modal-meta {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+}
+
+/* Tipos como chips */
+#modalTipos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1.25rem;
+}
+
+#modalTipos .type {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: #eee;
+    font-size: 0.9rem;
+    text-transform: capitalize;
+}
+
+.modal-size {
+    color: #6b7280;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-section-title {
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: #0f172a;
+    margin-bottom: 0.75rem;
+}
+
+#modalHabilidades {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1.5rem;
+}
+
+#modalHabilidades li {
+    padding: 0.15rem 0;
+    text-transform: capitalize;
+}
+
+#modalMovimientos {
+    color: #1f2937;
+    text-transform: lowercase;
+}
+
+@media (max-width: 720px) {
+    .modal-body {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-left {
+        margin-bottom: 1rem;
     }
 }

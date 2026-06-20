@@ -1,9 +1,9 @@
-
 const cmbGeneracion = document.getElementById("cmbGeneracion");
 const pokemonContainer = document.getElementById("pokemonContainer");
 const modalNombre = document.getElementById("modalNombre");
 const modalImagen = document.getElementById("modalImagen");
 const modalId = document.getElementById("modalId");
+const modalGeneracion = document.getElementById("modalGeneracion");
 const modalAltura = document.getElementById("modalAltura");
 const modalPeso = document.getElementById("modalPeso");
 const modalTipos = document.getElementById("modalTipos");
@@ -12,25 +12,49 @@ const modalMovimientos = document.getElementById("modalMovimientos");
 const pokemonModal = document.getElementById("pokemonModal");
 const bootstrapModal = new bootstrap.Modal(pokemonModal);
 
+// Rango de IDs por generación, usado para mostrar "Generación 01 • #005"
+const generationMap = {
+    1: [1, 151],
+    2: [152, 251],
+    3: [252, 386],
+    4: [387, 493],
+    5: [494, 649]
+};
+
 function padNumber(value) {
     return String(value).padStart(3, "0");
 }
-//funcuion para limpiar las listas del modal antes de cargar nueva informacion, asi evitamos que se acumulen los datos de diferentes pokemones
+
+function getGenerationForId(id) {
+    for (const k in generationMap) {
+        const [s, e] = generationMap[k];
+        if (id >= s && id <= e) return parseInt(k, 10);
+    }
+    return 1;
+}
+
 function limpiarListas() {
     modalTipos.innerHTML = "";
     modalHabilidades.innerHTML = "";
-    modalMovimientos.innerHTML = "";
+    modalMovimientos.textContent = "";
 }
 
 function muestraErrorModal(mensaje) {
     modalTipos.innerHTML = `<li>${mensaje}</li>`;
     modalHabilidades.innerHTML = `<li>${mensaje}</li>`;
-    modalMovimientos.innerHTML = `<li>${mensaje}</li>`;
+    modalMovimientos.textContent = mensaje;
 }
 
 function creaLista(elemento, items) {
     elemento.innerHTML = items
         .map((texto) => `<li class="text-capitalize">${texto}</li>`)
+        .join("");
+}
+
+// Renderiza los tipos como chips (estilo .type)
+function creaTipos(elemento, tipos) {
+    elemento.innerHTML = tipos
+        .map((texto) => `<li class="type text-capitalize">${texto}</li>`)
         .join("");
 }
 
@@ -57,12 +81,12 @@ async function cargarGeneracion(offset, limit) {
             const tarjeta = document.createElement("div");
             tarjeta.className = "col-6 col-md-4 col-lg-3";
             tarjeta.innerHTML = `
-                <div class="card pokemon-card h-100 shadow-sm" data-name="${pokemon.name}" data-id="${pokemonId}">
+                <div class="pokemon-card h-100" data-name="${pokemon.name}" data-id="${pokemonId}">
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png"
-                         class="card-img-top" alt="${pokemon.name}">
+                         alt="${pokemon.name}">
                     <div class="card-body text-center">
+                        <div class="poke-num">#${padNumber(pokemonId)}</div>
                         <h5 class="card-title text-capitalize mb-1">${pokemon.name}</h5>
-                        <p class="card-text text-secondary mb-0">#${padNumber(pokemonId)}</p>
                     </div>
                 </div>`;
 
@@ -81,8 +105,9 @@ async function cargarGeneracion(offset, limit) {
 }
 
 async function mostrarDetalle(nombre, id) {
-    modalNombre.textContent = nombre.toUpperCase();
+    modalNombre.textContent = nombre;
     modalId.textContent = `#${padNumber(id)}`;
+    modalGeneracion.textContent = `Generación ${padNumber(getGenerationForId(id)).slice(-2)}`;
     modalImagen.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
     modalImagen.alt = nombre;
     modalAltura.textContent = "...";
@@ -96,10 +121,10 @@ async function mostrarDetalle(nombre, id) {
         }
 
         const datos = await respuesta.json();
-        modalAltura.textContent = `${datos.height / 10} m`;
-        modalPeso.textContent = `${datos.weight / 10} kg`;
+        modalAltura.textContent = `${(datos.height / 10).toFixed(1)} m`;
+        modalPeso.textContent = `${(datos.weight / 10).toFixed(1)} kg`;
 
-        creaLista(
+        creaTipos(
             modalTipos,
             datos.types.map((item) => item.type.name)
         );
@@ -112,11 +137,9 @@ async function mostrarDetalle(nombre, id) {
             )
         );
 
-        const movimientos = datos.moves.slice(0, 12).map((item) => item.move.name);
-        creaLista(
-            modalMovimientos,
-            movimientos.length > 0 ? movimientos : ["No hay movimientos disponibles"]
-        );
+        const movimientos = datos.moves.slice(0, 6).map((item) => item.move.name);
+        modalMovimientos.textContent =
+            movimientos.length > 0 ? movimientos.join(" — ") : "No hay movimientos disponibles";
     } catch (error) {
         muestraErrorModal("No se pudieron cargar los datos del Pokémon.");
     }
