@@ -5,41 +5,31 @@
     <title>Pokedex</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body{
-            background:#f5f5f5;
-        }
-
-        .pokemon-card{
-            cursor:pointer;
-            transition:0.3s;
-            margin-bottom:20px;
-        }
-
-        .pokemon-card:hover{
-            transform:scale(1.05);
-        }
-
-        .pokemon-card img{
-            height:120px;
-            object-fit:contain;
-        }
-    </style>
+    <link href="../styles/formato.css" rel="stylesheet">
 </head>
 <body>
 
 <div class="container mt-4">
 
-    <h1 class="text-center mb-4">Pokédex</h1>
-
-    <select id="cmbGeneracion" class="form-select mb-4">
-        <option value="0,151">Primera Generación</option>
-        <option value="151,100">Segunda Generación</option>
-        <option value="251,135">Tercera Generación</option>
-        <option value="386,107">Cuarta Generación</option>
-        <option value="493,156">Quinta Generación</option>
-    </select>
+    <div class="header-top mb-3">
+        <div class="brand-logo mb-3">
+            <img src="../img/International_Pokémon_logo.svg" alt="Pokémon" class="pokemon-logo">
+        </div>
+        <div class="brand-line"></div>
+    </div>
+    <div class="header-row d-flex justify-content-end align-items-center mb-4 flex-column flex-sm-row flex-sm-wrap">
+        <div class="generation-label me-3 mb-2 mb-sm-0">Generación</div>
+        <div class="header-control">
+            <label for="cmbGeneracion" class="form-label visually-hidden">Seleccionar generación</label>
+            <select id="cmbGeneracion" class="form-select">
+                <option value="0,151">Primera Generación</option>
+                <option value="151,100">Segunda Generación</option>
+                <option value="251,135">Tercera Generación</option>
+                <option value="386,107">Cuarta Generación</option>
+                <option value="493,156">Quinta Generación</option>
+            </select>
+        </div>
+    </div>
 
     <div class="row" id="pokemonContainer"></div>
 
