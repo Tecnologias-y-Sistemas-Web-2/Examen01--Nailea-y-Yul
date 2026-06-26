@@ -3,11 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Pokedex</title>
-
+    <link rel="icon" type="image/png" href="../img/Favicon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../styles/formato.css" rel="stylesheet">
 </head>
 <body>
+
+<nav class="navbar navbar-expand-sm navbar-dark" style="background:#2a75bb;">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="../pages/index.html">Pokedex</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="../pages/index.html">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="../pages/entrenadores.html">Entrenadores</a></li>
+                <li class="nav-item"><a class="nav-link" href="../pages/equipos.html">Equipos</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
 <div class="container mt-4">
 
@@ -31,20 +47,21 @@
 
     <div class="header-top mb-3">
         <div class="brand-logo mb-3">
-            <img src="../img/International_Pokémon_logo.svg" alt="Pokémon" class="pokemon-logo">
+            <img src="../img/International_Pokémon_logo.svg" alt="Pokemon" class="pokemon-logo">
         </div>
         <div class="brand-line"></div>
     </div>
+
     <div class="header-row d-flex justify-content-end align-items-center mb-4 flex-column flex-sm-row flex-sm-wrap">
-        <div class="generation-label me-3 mb-2 mb-sm-0">Generación</div>
+        <div class="generation-label me-3 mb-2 mb-sm-0">Generacion</div>
         <div class="header-control">
-            <label for="cmbGeneracion" class="form-label visually-hidden">Seleccionar generación</label>
+            <label for="cmbGeneracion" class="form-label visually-hidden">Seleccionar generacion</label>
             <select id="cmbGeneracion" class="form-select">
-                <option value="0,151">Primera Generación</option>
-                <option value="151,100">Segunda Generación</option>
-                <option value="251,135">Tercera Generación</option>
-                <option value="386,107">Cuarta Generación</option>
-                <option value="493,156">Quinta Generación</option>
+                <option value="0,151">Primera Generacion</option>
+                <option value="151,100">Segunda Generacion</option>
+                <option value="251,135">Tercera Generacion</option>
+                <option value="386,107">Cuarta Generacion</option>
+                <option value="493,156">Quinta Generacion</option>
             </select>
         </div>
     </div>
@@ -60,7 +77,7 @@
             <button class="btn-close modal-close-btn" data-bs-dismiss="modal" aria-label="Cerrar"></button>
 
             <div class="modal-name-header">
-                <img src="../img/International_Pokémon_logo.svg" alt="Pokémon" class="modal-pokemon-logo">
+                <img src="../img/International_Pokémon_logo.svg" alt="Pokemon" class="modal-pokemon-logo">
                 <div class="modal-name-bar">
                     <span id="modalNombre"></span>
                 </div>
