@@ -69,6 +69,15 @@ function imagenPokemon(nombre) {
     return `https://img.pokemondb.net/sprites/omega-ruby-alpha-sapphire/dex/normal/${nombre.toLowerCase()}.png`;
 }
 
+function mostrarVistaFormulario(mostrar) {
+    const vistaLista = document.getElementById("vistaLista");
+    const vistaFormulario = document.getElementById("vistaFormulario");
+    if (!vistaLista || !vistaFormulario) return;
+
+    vistaLista.style.display = mostrar ? "none" : "block";
+    vistaFormulario.style.display = mostrar ? "block" : "none";
+}
+
 
 // ── Vista: lista de equipos ──────────────────────────────────
 const paginaEquipos = document.getElementById("equiposContainer");
@@ -241,6 +250,23 @@ if (paginaAgregar) {
         });
     }
 
+    const btnMostrarFormulario = document.getElementById("btnMostrarFormulario");
+    const btnCancelar = document.getElementById("btnCancelar");
+
+    if (btnMostrarFormulario) {
+        btnMostrarFormulario.addEventListener("click", () => {
+            mostrarVistaFormulario(true);
+            document.getElementById("alertaExito").style.display = "none";
+        });
+    }
+
+    if (btnCancelar) {
+        btnCancelar.addEventListener("click", (event) => {
+            event.preventDefault();
+            mostrarVistaFormulario(false);
+        });
+    }
+
     document.getElementById("btnGuardar").addEventListener("click", () => {
         const nombre = document.getElementById("nombreEquipo").value.trim();
         const imagen = document.getElementById("imagenEquipo").value.trim();
@@ -255,7 +281,7 @@ if (paginaAgregar) {
             nombre,
             imagen,
             entrenadorId: entId,
-            entrenadorNombre: entNombre === "— Seleccionar entrenador —" ? "Sin asignar" : entNombre,
+            entrenadorNombre: entNombre === "Seleccionar entrenador" ? "Sin asignar" : entNombre,
             pokemons: pokemonsElegidos
         };
 
@@ -265,10 +291,12 @@ if (paginaAgregar) {
             selEl.selectedIndex = 0;
             pokemonsElegidos = [];
             renderChips();
+            mostrarVistaFormulario(false);
 
             const alerta = document.getElementById("alertaExito");
             alerta.style.display = "block";
             setTimeout(() => { alerta.style.display = "none"; }, 3000);
+            cargarEquipos();
         }).catch(() => {
             alert("Ocurrió un error al guardar el equipo.");
         });
