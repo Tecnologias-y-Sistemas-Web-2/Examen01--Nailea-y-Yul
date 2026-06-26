@@ -118,9 +118,7 @@ body {
     }
 }
 
-/* ============================================================
-   MODAL DE DETALLE — diseño tipo "card" (imagen | información)
-   ============================================================ */
+
 
 .modal-content {
     border-radius: 1.5rem;
@@ -146,7 +144,6 @@ body {
     text-align: center;
 }
 
-/* Logo de Pokémon + barra amarilla con el nombre, dentro del modal */
 .modal-name-header {
     text-align: center;
     margin-bottom: 1.5rem;
@@ -186,7 +183,6 @@ body {
     margin-top: 0.5rem;
 }
 
-/* Tipos como chips */
 #modalTipos {
     display: flex;
     flex-wrap: wrap;
@@ -242,4 +238,44 @@ body {
     .modal-left {
         margin-bottom: 1rem;
     }
+}
+
+.navbar-nav .nav-link.active {
+    color: #0f5bb2 !important;
+    font-weight: 700;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.trainer-card {
+    border-radius: 1.5rem;
+    overflow: hidden;
+    border: none;
+    background: #ffffff;
+}
+
+.trainer-photo {
+    object-fit: cover;
+    height: 240px;
+    width: 100%;
+    background: #f5f7ff;
+}
+
+.trainer-label {
+    color: #475569;
+    font-size: 0.95rem;
+}
+
+.form-control, .form-select {
+    border-radius: 1rem;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: none;
+    border-color: #0f5bb2;
 }

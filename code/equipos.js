@@ -1,10 +1,29 @@
-const DB_NOMBRE = "pokedexDB";
+const DB_NAME = "PokedexDB";
+const DB_VERSION = 2;
 const STORE_ENTRENADORES = "entrenadores";
 const STORE_EQUIPOS = "equipos";
 
 function abrirDB() {
     return new Promise((resolve, reject) => {
-        const solicitud = indexedDB.open(DB_NOMBRE);
+        const solicitud = indexedDB.open(DB_NAME, DB_VERSION);
+
+        solicitud.onupgradeneeded = (event) => {
+            const db = event.target.result;
+
+            if (!db.objectStoreNames.contains(STORE_ENTRENADORES)) {
+                const store = db.createObjectStore(STORE_ENTRENADORES, { keyPath: 'id', autoIncrement: true });
+                store.createIndex('nombre', 'nombre', { unique: false });
+                store.createIndex('sexo', 'sexo', { unique: false });
+                store.createIndex('residencia', 'residencia', { unique: false });
+            }
+
+            if (!db.objectStoreNames.contains(STORE_EQUIPOS)) {
+                const store = db.createObjectStore(STORE_EQUIPOS, { keyPath: 'id', autoIncrement: true });
+                store.createIndex('nombre', 'nombre', { unique: false });
+                store.createIndex('entrenadorId', 'entrenadorId', { unique: false });
+            }
+        };
+
         solicitud.onsuccess = (e) => resolve(e.target.result);
         solicitud.onerror = (e) => reject(e.target.error);
     });
@@ -50,6 +69,15 @@ function imagenPokemon(nombre) {
     return `https://img.pokemondb.net/sprites/omega-ruby-alpha-sapphire/dex/normal/${nombre.toLowerCase()}.png`;
 }
 
+function mostrarVistaFormulario(mostrar) {
+    const vistaLista = document.getElementById("vistaLista");
+    const vistaFormulario = document.getElementById("vistaFormulario");
+    if (!vistaLista || !vistaFormulario) return;
+
+    vistaLista.style.display = mostrar ? "none" : "block";
+    vistaFormulario.style.display = mostrar ? "block" : "none";
+}
+
 
 // ── Vista: lista de equipos ──────────────────────────────────
 const paginaEquipos = document.getElementById("equiposContainer");
@@ -62,11 +90,9 @@ if (paginaEquipos) {
 
             if (lista.length === 0) {
                 paginaEquipos.innerHTML = `
-                    <div class="col-12 estado-vacio">
-                        <div class="icono">⚽</div>
-                        <p class="fw-bold fs-5">Aún no hay equipos registrados.</p>
-                        <a href="../pages/agregar_equipo.html" class="btn btn-primary rounded-pill px-4"
-                           style="background:#2a75bb;border:none;">Crear el primer equipo</a>
+                    <div class="col-12 text-center py-5">
+                        <div class="fw-bold fs-5">Aún no hay equipos registrados.</div>
+                        <p class="text-muted">Pulsa "Nuevo equipo" para crear el primer equipo.</p>
                     </div>`;
                 return;
             }
@@ -142,7 +168,7 @@ if (paginaAgregar) {
         lista.forEach((e) => {
             const op = document.createElement("option");
             op.value = e.id;
-            op.textContent = `${e.nombre} ${e.apellidos}`;
+            op.textContent = e.nombre;
             sel.appendChild(op);
         });
     });
@@ -224,6 +250,23 @@ if (paginaAgregar) {
         });
     }
 
+    const btnMostrarFormulario = document.getElementById("btnMostrarFormulario");
+    const btnCancelar = document.getElementById("btnCancelar");
+
+    if (btnMostrarFormulario) {
+        btnMostrarFormulario.addEventListener("click", () => {
+            mostrarVistaFormulario(true);
+            document.getElementById("alertaExito").style.display = "none";
+        });
+    }
+
+    if (btnCancelar) {
+        btnCancelar.addEventListener("click", (event) => {
+            event.preventDefault();
+            mostrarVistaFormulario(false);
+        });
+    }
+
     document.getElementById("btnGuardar").addEventListener("click", () => {
         const nombre = document.getElementById("nombreEquipo").value.trim();
         const imagen = document.getElementById("imagenEquipo").value.trim();
@@ -238,7 +281,7 @@ if (paginaAgregar) {
             nombre,
             imagen,
             entrenadorId: entId,
-            entrenadorNombre: entNombre === "— Seleccionar entrenador —" ? "Sin asignar" : entNombre,
+            entrenadorNombre: entNombre === "Seleccionar entrenador" ? "Sin asignar" : entNombre,
             pokemons: pokemonsElegidos
         };
 
@@ -248,10 +291,12 @@ if (paginaAgregar) {
             selEl.selectedIndex = 0;
             pokemonsElegidos = [];
             renderChips();
+            mostrarVistaFormulario(false);
 
             const alerta = document.getElementById("alertaExito");
             alerta.style.display = "block";
             setTimeout(() => { alerta.style.display = "none"; }, 3000);
+            cargarEquipos();
         }).catch(() => {
             alert("Ocurrió un error al guardar el equipo.");
         });
