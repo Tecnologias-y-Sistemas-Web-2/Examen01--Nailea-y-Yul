@@ -72,6 +72,23 @@ async function obtenerEntrenadores() {
     });
 }
 
+async function eliminarEntrenador(id) {
+    const db = await abrirBaseDatos();
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(STORE_ENTRENADORES, 'readwrite');
+        const store = transaction.objectStore(STORE_ENTRENADORES);
+        const request = store.delete(id);
+
+        request.onsuccess = function () {
+            resolve();
+        };
+
+        request.onerror = function () {
+            reject(new Error('No se pudo eliminar el entrenador.'));
+        };
+    });
+}
+
 function mostrarVistaFormulario(mostrar) {
     const vistaLista = document.getElementById("vistaLista");
     const vistaFormulario = document.getElementById("vistaFormulario");
@@ -85,6 +102,7 @@ function mostrarVistaFormulario(mostrar) {
 const paginaEntrenadores = document.getElementById("entrenadoresContainer");
 if (paginaEntrenadores) {
     const modal = new bootstrap.Modal(document.getElementById("detalleModal"));
+    let entrenadorActual = null;
 
     function cargarEntrenadores() {
         obtenerEntrenadores().then((lista) => {
@@ -109,8 +127,8 @@ if (paginaEntrenadores) {
                              onerror="this.src='https://via.placeholder.com/300x160?text=Sin+foto'">
                         <div class="card-body">
                             <h5 class="card-title">${entrenador.nombre}</h5>
-                            <p class="entrenador-badge mb-1">👤 ${entrenador.sexo}</p>
-                            <p class="entrenador-badge">📍 ${entrenador.residencia}</p>
+                            <p class="entrenador-badge mb-1">${entrenador.sexo}</p>
+                            <p class="entrenador-badge">${entrenador.residencia}</p>
                         </div>
                     </div>`;
 
@@ -126,6 +144,7 @@ if (paginaEntrenadores) {
     }
 
     function mostrarDetalle(entrenador) {
+        entrenadorActual = entrenador;
         document.getElementById("detNombre").textContent = entrenador.nombre;
         document.getElementById("detSexo").textContent = entrenador.sexo;
         document.getElementById("detResidencia").textContent = entrenador.residencia;
@@ -139,6 +158,23 @@ if (paginaEntrenadores) {
         }
 
         modal.show();
+    }
+
+    const btnEliminarModal = document.getElementById("btnEliminarEntrenador");
+    if (btnEliminarModal) {
+        btnEliminarModal.addEventListener("click", async () => {
+            if (!entrenadorActual) return;
+            if (!confirm(`¿Estás seguro de que deseas eliminar a "${entrenadorActual.nombre}"?`)) return;
+
+            try {
+                await eliminarEntrenador(entrenadorActual.id);
+                modal.hide();
+                entrenadorActual = null;
+                cargarEntrenadores();
+            } catch (error) {
+                alert("No fue posible eliminar el entrenador. " + (error.message || ""));
+            }
+        });
     }
 
     const btnMostrarFormulario = document.getElementById("btnMostrarFormulario");
@@ -182,8 +218,7 @@ if (btnGuardar) {
             document.getElementById("fotoEntrenador").value = "";
             setTimeout(() => { formAlert.style.display = "none"; }, 3000);
             mostrarVistaFormulario(false);
-            
-            // Recargar la lista
+
             const paginaEntrenadores = document.getElementById("entrenadoresContainer");
             if (paginaEntrenadores) {
                 location.reload();
@@ -193,4 +228,3 @@ if (btnGuardar) {
         }
     });
 }
-

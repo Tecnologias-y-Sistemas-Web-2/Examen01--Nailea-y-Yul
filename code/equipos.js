@@ -53,6 +53,18 @@ function obtenerEquipos() {
     });
 }
 
+function eliminarEquipo(id) {
+    return abrirDB().then((db) => {
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(STORE_EQUIPOS, "readwrite");
+            const store = tx.objectStore(STORE_EQUIPOS);
+            const req = store.delete(id);
+            req.onsuccess = () => resolve();
+            req.onerror = (e) => reject(e.target.error);
+        });
+    });
+}
+
 function obtenerEntrenadores() {
     return abrirDB().then((db) => {
         return new Promise((resolve, reject) => {
@@ -83,6 +95,7 @@ function mostrarVistaFormulario(mostrar) {
 const paginaEquipos = document.getElementById("equiposContainer");
 if (paginaEquipos) {
     const modal = new bootstrap.Modal(document.getElementById("detalleModal"));
+    let equipoActual = null;
 
     function cargarEquipos() {
         obtenerEquipos().then((lista) => {
@@ -108,8 +121,8 @@ if (paginaEquipos) {
                              onerror="this.src='https://via.placeholder.com/300x160?text=Sin+imagen'">
                         <div class="card-body">
                             <h5 class="card-title">${equipo.nombre}</h5>
-                            <p class="entrenador-badge mb-1">👤 ${equipo.entrenadorNombre || "Sin asignar"}</p>
-                            <p class="entrenador-badge">🎮 ${cantPoke} Pokémon${cantPoke !== 1 ? "s" : ""}</p>
+                            <p class="entrenador-badge mb-1">${equipo.entrenadorNombre || "Sin asignar"}</p>
+                            <p class="entrenador-badge">${cantPoke} Pokemon${cantPoke !== 1 ? "s" : ""}</p>
                         </div>
                     </div>`;
 
@@ -125,6 +138,7 @@ if (paginaEquipos) {
     }
 
     function mostrarDetalle(equipo) {
+        equipoActual = equipo;
         document.getElementById("detNombre").textContent = equipo.nombre;
         document.getElementById("detEntrenador").textContent = equipo.entrenadorNombre || "Sin asignar";
 
@@ -148,6 +162,23 @@ if (paginaEquipos) {
         modal.show();
     }
 
+    const btnEliminarModal = document.getElementById("btnEliminarEquipo");
+    if (btnEliminarModal) {
+        btnEliminarModal.addEventListener("click", async () => {
+            if (!equipoActual) return;
+            if (!confirm(`¿Estás seguro de que deseas eliminar el equipo "${equipoActual.nombre}"?`)) return;
+
+            try {
+                await eliminarEquipo(equipoActual.id);
+                modal.hide();
+                equipoActual = null;
+                cargarEquipos();
+            } catch (error) {
+                alert("No fue posible eliminar el equipo. " + (error.message || ""));
+            }
+        });
+    }
+
     cargarEquipos();
 }
 
@@ -162,7 +193,7 @@ if (paginaAgregar) {
         const sel = document.getElementById("selectEntrenador");
         const info = document.getElementById("textoEntrenador");
         if (lista.length === 0) {
-            info.textContent = "⚠️ Aún no hay entrenadores registrados.";
+            info.textContent = "Aún no hay entrenadores registrados.";
             return;
         }
         lista.forEach((e) => {
@@ -221,7 +252,7 @@ if (paginaAgregar) {
         inputBuscar.value = "";
 
         if (pokemonsElegidos.length >= 6) {
-            alert("El equipo ya tiene 6 Pokémons (máximo permitido).");
+            alert("El equipo ya tiene 6 Pokemons (máximo permitido).");
             return;
         }
         if (pokemonsElegidos.find((p) => p.nombre === nombre)) {
@@ -275,7 +306,7 @@ if (paginaAgregar) {
         const entNombre = selEl.options[selEl.selectedIndex]?.text || "";
 
         if (!nombre) { alert("Por favor ingresá el nombre del equipo."); return; }
-        if (pokemonsElegidos.length === 0) { alert("Agregá al menos un Pokémon al equipo."); return; }
+        if (pokemonsElegidos.length === 0) { alert("Agregá al menos un Pokemon al equipo."); return; }
 
         const equipo = {
             nombre,
