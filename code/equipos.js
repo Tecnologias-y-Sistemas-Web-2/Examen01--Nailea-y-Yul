@@ -1,10 +1,29 @@
-const DB_NOMBRE = "pokedexDB";
+const DB_NAME = "PokedexDB";
+const DB_VERSION = 2;
 const STORE_ENTRENADORES = "entrenadores";
 const STORE_EQUIPOS = "equipos";
 
 function abrirDB() {
     return new Promise((resolve, reject) => {
-        const solicitud = indexedDB.open(DB_NOMBRE);
+        const solicitud = indexedDB.open(DB_NAME, DB_VERSION);
+
+        solicitud.onupgradeneeded = (event) => {
+            const db = event.target.result;
+
+            if (!db.objectStoreNames.contains(STORE_ENTRENADORES)) {
+                const store = db.createObjectStore(STORE_ENTRENADORES, { keyPath: 'id', autoIncrement: true });
+                store.createIndex('nombre', 'nombre', { unique: false });
+                store.createIndex('sexo', 'sexo', { unique: false });
+                store.createIndex('residencia', 'residencia', { unique: false });
+            }
+
+            if (!db.objectStoreNames.contains(STORE_EQUIPOS)) {
+                const store = db.createObjectStore(STORE_EQUIPOS, { keyPath: 'id', autoIncrement: true });
+                store.createIndex('nombre', 'nombre', { unique: false });
+                store.createIndex('entrenadorId', 'entrenadorId', { unique: false });
+            }
+        };
+
         solicitud.onsuccess = (e) => resolve(e.target.result);
         solicitud.onerror = (e) => reject(e.target.error);
     });
@@ -62,11 +81,9 @@ if (paginaEquipos) {
 
             if (lista.length === 0) {
                 paginaEquipos.innerHTML = `
-                    <div class="col-12 estado-vacio">
-                        <div class="icono">⚽</div>
-                        <p class="fw-bold fs-5">Aún no hay equipos registrados.</p>
-                        <a href="../pages/agregar_equipo.html" class="btn btn-primary rounded-pill px-4"
-                           style="background:#2a75bb;border:none;">Crear el primer equipo</a>
+                    <div class="col-12 text-center py-5">
+                        <div class="fw-bold fs-5">Aún no hay equipos registrados.</div>
+                        <p class="text-muted">Pulsa "Nuevo equipo" para crear el primer equipo.</p>
                     </div>`;
                 return;
             }
@@ -142,7 +159,7 @@ if (paginaAgregar) {
         lista.forEach((e) => {
             const op = document.createElement("option");
             op.value = e.id;
-            op.textContent = `${e.nombre} ${e.apellidos}`;
+            op.textContent = e.nombre;
             sel.appendChild(op);
         });
     });
