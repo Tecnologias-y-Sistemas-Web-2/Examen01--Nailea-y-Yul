@@ -53,12 +53,6 @@ body {
     }
 }
 
-.header-control {
-    min-width: 240px;
-    width: 100%;
-    max-width: 360px;
-}
-
 #cmbGeneracion {
     border-radius: 1rem;
     padding: 0.9rem 1rem;
@@ -66,6 +60,39 @@ body {
     background: #ffffff;
 }
 
+/* ── Navbar ── */
+.navbar {
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.18);
+}
+
+.navbar .navbar-brand {
+    color: #ffffff !important;
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: 0.02em;
+}
+
+.navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500;
+    font-size: 0.97rem;
+    transition: color 0.15s;
+    padding: 0.5rem 0.9rem;
+    border-radius: 0.5rem;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.navbar-nav .nav-link.active {
+    color: #ffcb05 !important;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ── Pokemon cards ── */
 .pokemon-card {
     cursor: pointer;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -118,8 +145,7 @@ body {
     }
 }
 
-
-
+/* ── Modal ── */
 .modal-content {
     border-radius: 1.5rem;
     border: none;
@@ -240,11 +266,7 @@ body {
     }
 }
 
-.navbar-nav .nav-link.active {
-    color: #0f5bb2 !important;
-    font-weight: 700;
-}
-
+/* ── Trainer card ── */
 .page-title {
     font-size: 2rem;
     font-weight: 700;
@@ -260,6 +282,7 @@ body {
 
 .trainer-photo {
     object-fit: cover;
+    object-position: top;
     height: 240px;
     width: 100%;
     background: #f5f7ff;
@@ -270,6 +293,7 @@ body {
     font-size: 0.95rem;
 }
 
+/* ── Forms ── */
 .form-control, .form-select {
     border-radius: 1rem;
     border: 1px solid rgba(15, 23, 42, 0.12);
